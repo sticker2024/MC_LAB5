@@ -1,0 +1,70 @@
+================================================================================================
+Mini Project 5.1 Part A - challenge-response mutual authentication (HMAC-SHA256)
+================================================================================================
+[step 1] shared secret K generated and stored in Device and HomeNetwork (value not printed)
+
+--- run 1: mutual authentication ---
+   [channel] HomeNetwork -> Device      RAND      19aa2a4a5758c453396ed3e5027e805b...
+   [channel] HomeNetwork -> Device      AUTN      8a525c807b75fa901f2594f042192f57...
+   [channel]      Device -> HomeNetwork RES       31abb4cc0f5fe7c26f6f0ec93ebd2356...
+   network verifies device : True (response matches); RES == network's own response? True
+   device verifies network : True
+   session key (device)    : 79cdf2588d67d0111f8cc0aac0455971...
+   session key (network)   : 79cdf2588d67d0111f8cc0aac0455971...  identical = True
+   K appeared on the channel?            False
+   session key appeared on the channel?  False
+   RES differs from session key (label separation)? True
+
+--- run 2: mutual authentication ---
+   [channel] HomeNetwork -> Device      RAND      4d4a44fa27411de6c1946178ce45209d...
+   [channel] HomeNetwork -> Device      AUTN      93fc69192290e38ad4c83c6b67da27c5...
+   [channel]      Device -> HomeNetwork RES       e22d238f673bdc18b5e994ce8c1710c1...
+   network verifies device : True (response matches); RES == network's own response? True
+   device verifies network : True
+   session key (device)    : 9fb9ea04777aa7bdf99cc2a1e459f76f...
+   session key (network)   : 9fb9ea04777aa7bdf99cc2a1e459f76f...  identical = True
+   K appeared on the channel?            False
+   session key appeared on the channel?  False
+   RES differs from session key (label separation)? True
+   -> RAND differs from run 1: True;  session key differs from run 1: True
+
+--- negative control: a device holding a different key ---
+   verification result: False (response mismatch)
+
+--- steps 7-9: attacker who recorded RAND and RES but has no K ---
+   new challenge RAND2 = 63ac5e9af22c0ff76fd78221e306ecb9...
+   (a) replay old RES for RAND2           : accepted=False (response mismatch)
+   (b) guess K = RAND                : forged RES matches = False; key reproduces the observed RES1 = False
+   (b) guess K = RES                 : forged RES matches = False; key reproduces the observed RES1 = False
+   (b) guess K = 16 zero bytes       : forged RES matches = False; key reproduces the observed RES1 = False
+   (b) guess K = b'secret'           : forged RES matches = False; key reproduces the observed RES1 = False
+   (b) guess K = first 16 B of RES   : forged RES matches = False; key reproduces the observed RES1 = False
+   (c) brute force: 200,000 random 256-bit keys tried in 0.57 s (349,397 keys/s), key found = False
+       exhaustive search of 2^256 keys at this rate would take about 1.1e+64 years
+   (d) forge the network token AUTN with a guess: device would accept = False
+   (e) PRF behaviour: flipping ONE bit of RAND changes 125 of 256 bits of RES (~50 % expected)
+   WHY IT FAILS: HMAC-SHA256 is a one-way keyed PRF; (RAND, RES) pairs do not reveal K or predict RES for a new RAND.
+
+--- Lab task 1: replay attack ---
+   legitimate run accepted by network: True
+   attacker replays captured (RAND, RES) to a STATELESS network: accepted = True  <-- replay works
+   attacker answers a NEW RAND with the captured RES        : accepted = False
+   [used-RAND tracking] legitimate run: (True, 'response matches')
+   [used-RAND tracking] replayed (RAND, RES): (False, 'RAND already used (replay rejected)')
+   [used-RAND tracking] answer to a RAND never issued: (False, 'RAND was never issued by this network')
+   Parallel with real AKA: the network binds each challenge to a sequence number (SQN) carried in AUTN;
+   the SIM rejects a stale SQN, so a recorded RAND/AUTN cannot be replayed to the device either.
+
+--- Lab task 3: network proves itself to the device (AUTN-like token) ---
+   genuine network: device accepts token = True
+   rogue base station (no K) sends its own token: device accepts = False
+   GSM A3 authenticated only the SIM to the network, so a fake BTS could impersonate the network;
+   UMTS AKA adds AUTN so the device also verifies the network.
+
+--- Lab task 4: ways this scheme simplifies real 5G AKA ---
+   1. No SUCI: the subscriber identity (SUPI/IMSI) would be sent in clear; 5G conceals it with ECIES public-key encryption of the SUPI.
+   2. No standardised MILENAGE/TUAK: a generic HMAC-SHA256 stands in for f1-f5 (RES, CK, IK, AK, MAC).
+   3. No sequence number / AUTN structure: replay protection here is a used-RAND list, not SQN + AMF + MAC-A with window checks.
+   4. No anonymity key (AK) hiding the SQN and no AUTS resynchronisation procedure after a sync failure.
+   5. No key hierarchy: real 5G derives K_AUSF -> K_SEAF -> K_AMF -> K_gNB / NAS keys (and separate user-plane keys); here one session key.
+   6. No serving-network binding (SNN) in key derivation and no home-network control of the final confirmation (5G AKA / EAP-AKA').

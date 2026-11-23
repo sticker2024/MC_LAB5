@@ -1,0 +1,180 @@
+[
+  {
+    "priority": "P1",
+    "fix": "unbundle_consent",
+    "action": "Replace bundled-terms, implied and opt-out consent with a separate, un-ticked opt-in toggle per purpose (location-for-ads, ad ID, analytics, insurer programme); log timestamp, policy version and purpose; refusing must not block the core fitness features.",
+    "practices": [
+      "P2",
+      "P4",
+      "P6",
+      "P7"
+    ],
+    "frameworks": [
+      "DPDP Act",
+      "GDPR",
+      "LGPD"
+    ],
+    "rules": [
+      "D1",
+      "G1",
+      "L1"
+    ]
+  },
+  {
+    "priority": "P1",
+    "fix": "age_gate",
+    "action": "Add an age gate. Require verifiable parental consent below the applicable age (GDPR Art. 8: 13-16 by member state; DPDP Act: under 18; CCPA/CPRA: opt-in to sale below 16), and switch off advertising, tracking and behavioural profiling for minors.",
+    "practices": [
+      "APP",
+      "P2",
+      "P4",
+      "P6",
+      "P7"
+    ],
+    "frameworks": [
+      "CCPA/CPRA",
+      "DPDP Act",
+      "GDPR"
+    ],
+    "rules": [
+      "C4",
+      "D3",
+      "G5"
+    ]
+  },
+  {
+    "priority": "P1",
+    "fix": "explicit_sensitive",
+    "action": "Add a dedicated 'explicit consent' screen for health and biometric data that names the data, purpose and recipients, is separate from the Terms of Service and can be refused without losing core features.",
+    "practices": [
+      "P4",
+      "P8"
+    ],
+    "frameworks": [
+      "GDPR",
+      "LGPD"
+    ],
+    "rules": [
+      "G2",
+      "L2"
+    ]
+  },
+  {
+    "priority": "P1",
+    "fix": "location_optin",
+    "action": "Show an opt-in prompt BEFORE precise location is collected and use a second, separate opt-in for advertising uses; default to coarse location for any ad purpose.",
+    "practices": [
+      "P2"
+    ],
+    "frameworks": [
+      "GDPR"
+    ],
+    "rules": [
+      "G2"
+    ]
+  },
+  {
+    "priority": "P1",
+    "fix": "ccpa_links",
+    "action": "Add 'Do Not Sell or Share My Personal Information' and 'Limit the Use of My Sensitive Personal Information' links (in the app settings and on the web), and honour the Global Privacy Control browser signal.",
+    "practices": [
+      "APP",
+      "P2",
+      "P4",
+      "P7",
+      "P8"
+    ],
+    "frameworks": [
+      "CCPA/CPRA"
+    ],
+    "rules": [
+      "C2",
+      "C3",
+      "C6"
+    ]
+  },
+  {
+    "priority": "P1",
+    "fix": "stop_health_sale",
+    "action": "Stop selling or sharing health data with the insurer. If the programme is kept, make it user-initiated (the user exports and sends their own data) with explicit consent, a financial-incentive notice and no data flowing by default.",
+    "practices": [
+      "P4"
+    ],
+    "frameworks": [
+      "LGPD"
+    ],
+    "rules": [
+      "L3"
+    ]
+  },
+  {
+    "priority": "P2",
+    "fix": "notice_update",
+    "action": "Update the notice at collection / privacy notice so every category, purpose, recipient (including the insurer partner) and retention period is listed before collection.",
+    "practices": [
+      "P4"
+    ],
+    "frameworks": [
+      "CCPA/CPRA",
+      "DPDP Act",
+      "GDPR",
+      "LGPD"
+    ],
+    "rules": [
+      "C1",
+      "D1",
+      "G4",
+      "L5"
+    ]
+  },
+  {
+    "priority": "P2",
+    "fix": "retention",
+    "action": "Define and enforce a finite retention period for every category (e.g. delete biometric templates on account deletion or when the leaderboard feature is switched off); implement automatic purge jobs and publish the periods.",
+    "practices": [
+      "P8"
+    ],
+    "frameworks": [
+      "CCPA/CPRA",
+      "DPDP Act",
+      "GDPR",
+      "LGPD"
+    ],
+    "rules": [
+      "C5",
+      "D4",
+      "G3",
+      "L4"
+    ]
+  },
+  {
+    "priority": "P2",
+    "fix": "dpa",
+    "action": "Sign data-processing agreements (GDPR Art. 28 / LGPD operator contracts / DPDP processor contracts) with the analytics vendor and ad network, and document the legal basis for any international transfer.",
+    "practices": [
+      "P2",
+      "P6",
+      "P7"
+    ],
+    "frameworks": [
+      "GDPR"
+    ],
+    "rules": [
+      "G4"
+    ]
+  },
+  {
+    "priority": "P3",
+    "fix": "withdrawal",
+    "action": "Make withdrawing consent as easy as giving it (one settings toggle per purpose, effective immediately) and publish a grievance channel that answers within the statutory period (DPDP Rules: no later than 90 days).",
+    "practices": [
+      "APP"
+    ],
+    "frameworks": [
+      "DPDP Act"
+    ],
+    "rules": [
+      "D5"
+    ]
+  }
+]

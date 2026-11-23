@@ -1,0 +1,37 @@
+practice,category,framework,status,gaps
+P1,precise_location,GDPR,compliant,
+P1,precise_location,CCPA/CPRA,compliant,
+P1,precise_location,LGPD,compliant,
+P1,precise_location,DPDP Act,compliant,
+P2,precise_location,GDPR,gap,"G1 lawful basis / valid consent: consent mechanism 'bundled_terms' is not an affirmative, unbundled opt-in | G2 location treated as sensitive: no valid opt-in before precise-location collection | G4 recipients and processor contracts: no data-processing agreement with recipient"
+P2,precise_location,CCPA/CPRA,gap,C2 opt-out of sale / sharing: no 'Do Not Sell or Share' link and/or Global Privacy Control not honoured | C3 sensitive personal information: sensitive PI (precise geolocation / health / biometric) used beyond the service or sold/shared without a 'Limit the Use of My Sensitive Personal Information' link | C4 minors under 16: opt-in to sale/sharing: 13-15 year-olds possible; sale/sharing needs their own opt-in (parent below 13) but no age gate
+P2,precise_location,LGPD,gap,"L1 legal basis (Art. 7) / valid consent (Art. 8): 'bundled_terms' is not specific, unambiguous consent"
+P2,precise_location,DPDP Act,gap,"D1 notice + consent or legitimate use: 'bundled_terms' is not free, specific, unambiguous consent by clear affirmative action | D3 no tracking / targeted ads directed at children: tracking / targeted advertising may reach under-18 Data Principals (no age gate)"
+P3,health,GDPR,compliant,
+P3,health,CCPA/CPRA,compliant,
+P3,health,LGPD,compliant,
+P3,health,DPDP Act,compliant,
+P4,health,GDPR,gap,"G1 lawful basis / valid consent: consent mechanism 'opt_out_setting' is not an affirmative, unbundled opt-in | G2 special-category data (Art. 9): health data needs explicit consent, found 'opt_out_setting' | G4 recipients and processor contracts: not disclosed in the notice"
+P4,health,CCPA/CPRA,gap,C1 notice at collection: category/recipient not disclosed at or before collection | C2 opt-out of sale / sharing: no 'Do Not Sell or Share' link and/or Global Privacy Control not honoured | C3 sensitive personal information: sensitive PI (precise geolocation / health / biometric) used beyond the service or sold/shared without a 'Limit the Use of My Sensitive Personal Information' link | C4 minors under 16: opt-in to sale/sharing: 13-15 year-olds possible; sale/sharing needs their own opt-in (parent below 13) but no age gate
+P4,health,LGPD,gap,"L1 legal basis (Art. 7) / valid consent (Art. 8): 'opt_out_setting' is not specific, unambiguous consent | L2 sensitive personal data (Art. 11): health data needs specific and highlighted consent, found 'opt_out_setting' | L3 health data shared for economic advantage (Art. 11 par. 4): sharing health data between controllers for economic advantage is prohibited (narrow exceptions) | L5 transparency (Art. 9): practice not disclosed to the data subject"
+P4,health,DPDP Act,gap,D1 notice + consent or legitimate use: Data Principal not given an itemised notice
+P5,contacts,GDPR,compliant,
+P5,contacts,CCPA/CPRA,compliant,
+P5,contacts,LGPD,compliant,
+P5,contacts,DPDP Act,compliant,
+P6,analytics,GDPR,gap,"G1 lawful basis / valid consent: consent mechanism 'implied_notice' is not an affirmative, unbundled opt-in | G4 recipients and processor contracts: no data-processing agreement with recipient"
+P6,analytics,CCPA/CPRA,compliant,
+P6,analytics,LGPD,compliant,
+P6,analytics,DPDP Act,gap,"D1 notice + consent or legitimate use: 'implied_notice' is not free, specific, unambiguous consent by clear affirmative action | D3 no tracking / targeted ads directed at children: tracking / targeted advertising may reach under-18 Data Principals (no age gate)"
+P7,ad_id,GDPR,gap,"G1 lawful basis / valid consent: consent mechanism 'opt_out_setting' is not an affirmative, unbundled opt-in | G4 recipients and processor contracts: no data-processing agreement with recipient"
+P7,ad_id,CCPA/CPRA,gap,C2 opt-out of sale / sharing: no 'Do Not Sell or Share' link and/or Global Privacy Control not honoured | C4 minors under 16: opt-in to sale/sharing: 13-15 year-olds possible; sale/sharing needs their own opt-in (parent below 13) but no age gate
+P7,ad_id,LGPD,gap,"L1 legal basis (Art. 7) / valid consent (Art. 8): 'opt_out_setting' is not specific, unambiguous consent"
+P7,ad_id,DPDP Act,gap,"D1 notice + consent or legitimate use: 'opt_out_setting' is not free, specific, unambiguous consent by clear affirmative action | D3 no tracking / targeted ads directed at children: tracking / targeted advertising may reach under-18 Data Principals (no age gate)"
+P8,biometric,GDPR,gap,"G2 special-category data (Art. 9): biometric data needs explicit consent, found 'opt_in_dialog' | G3 storage limitation: retention indefinite / undefined"
+P8,biometric,CCPA/CPRA,gap,C3 sensitive personal information: sensitive PI (precise geolocation / health / biometric) used beyond the service or sold/shared without a 'Limit the Use of My Sensitive Personal Information' link | C5 retention disclosed and limited: no retention period
+P8,biometric,LGPD,gap,"L2 sensitive personal data (Art. 11): biometric data needs specific and highlighted consent, found 'opt_in_dialog' | L4 necessity / end of processing (Art. 15-16): no end-of-processing point defined"
+P8,biometric,DPDP Act,gap,D4 erase when purpose is served or consent withdrawn: no erasure point defined
+APP,app-wide,GDPR,gap,G5 children's consent (Art. 8): minimum age 13 but no age gate / parental authorisation for consent-based processing
+APP,app-wide,CCPA/CPRA,gap,C6 consumer-rights links: no 'Do Not Sell or Share' / 'Limit the Use of My Sensitive PI' links; GPC not honoured
+APP,app-wide,LGPD,compliant,
+APP,app-wide,DPDP Act,gap,D3 verifiable parental consent for children (under 18): Data Fiduciary lacks verifiable parental consent for under-18 Data Principals | D5 easy withdrawal + grievance redressal: withdrawing consent is harder than giving it

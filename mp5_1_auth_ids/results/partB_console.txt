@@ -1,0 +1,58 @@
+==============================================================================================================
+Mini Project 5.1 Part B - signaling-plane IDS on a synthetic log
+==============================================================================================================
+generated 92 events (seed 3); injected anomaly kinds: burst, malformed_missing, malformed_type, out_of_order, travel
+sample of ordinary events:
+    {'timestamp': '11-23 00:16:25', 'subscriber_id': 'SUB0006', 'event_type': 'location_update', 'country': 'RW'}
+    {'timestamp': '11-23 00:18:52', 'subscriber_id': 'SUB0000', 'event_type': 'location_update', 'country': 'RW'}
+    {'timestamp': '11-23 00:31:47', 'subscriber_id': 'SUB0007', 'event_type': 'location_update', 'country': 'RW'}
+    {'timestamp': '11-23 00:38:35', 'subscriber_id': 'SUB0008', 'event_type': 'auth_request', 'country': 'RW'}
+
+-- detector run: all four rules (R1 schema, R2 travel @900 km/h, R3 auth rate, R4 monotonic) --
+ idx  time            subscriber event_type        country rule detail  [ground truth]
+  38  11-23 09:16:02  ANOM004    auth_request      RW      R3   6 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  39  11-23 09:16:04  ANOM004    auth_request      RW      R3   7 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  40  11-23 09:16:06  ANOM004    auth_request      RW      R3   8 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  41  11-23 09:16:08  ANOM004    auth_request      RW      R3   9 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  42  11-23 09:16:10  ANOM004    auth_request      RW      R3   10 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  43  11-23 09:16:12  ANOM004    auth_request      RW      R3   11 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  44  11-23 09:16:14  ANOM004    auth_request      RW      R3   12 auth_requests within 60 s (limit 5)  [INJECTED:burst]
+  45  11-23 09:21:41  -          attach            RW      R1   missing field(s): subscriber_id  [INJECTED:malformed_missing]
+  50  11-23 10:19:37  ANOM003    LOCATIONUPDATE    RW      R1   invalid event_type 'LOCATIONUPDATE'  [INJECTED:malformed_type]
+  56  11-23 08:23:08  ANOM005    location_update   RW      R4   timestamp 11-23 08:23:08 earlier than previous 11-23 11:23:09 (non-monotonic arrival)  [INJECTED:out_of_order]
+
+summary: 5 injected anomalies, 4 detected, 1 missed; 10 events flagged (0 legitimate events flagged).
+missed (false negative): ANOM001 RW->US in 13.9 h; 900 km/h minimum is 12.9 h, so the move looks physically possible (a lenient threshold hides spoofing just inside the limit)
+ordinary events passed unflagged: 76 of 76
+
+-- lab task 2: auth_request rate rule (R3) tested against the burst anomaly --
+   R3 flagged 7 events; first at idx 38: 6 auth_requests within 60 s (limit 5)
+   without R3 the burst is detected: 0 of 1
+
+-- lab task 6: non-monotonic timestamp rule (R4) --
+   idx 56: timestamp 11-23 08:23:08 earlier than previous 11-23 11:23:09 (non-monotonic arrival)
+   Real meaning: a signalling message with an older timestamp arriving later = clock skew between nodes,
+   buffered/delayed delivery, a replayed or injected message, or log tampering - worth investigating.
+
+-- lab task 5: larger log: 20505 events, 20190 legitimate, injected {'travel': 80, 'malformed_missing': 20, 'malformed_type': 20, 'burst': 15, 'out_of_order': 15} --
+   (legitimate traffic includes ~6 % air travellers and ~8 % border-town hoppers; 80 travel anomalies have gaps
+    from 2 % to 130 % of the 900 km/h minimum travel time, so the hardest ones look 'plausible')
+
+   V_MAX (km/h)  adjacency | travel anomalies  detected  missed (FN) |  legit events flagged (FP)  precision   recall
+            100         on |               80        80            0 |                       1266      0.059    1.000
+            100        off |               80        80            0 |                       1846      0.042    1.000
+            200         on |               80        80            0 |                        520      0.133    1.000
+            200        off |               80        80            0 |                       1844      0.042    1.000
+            400         on |               80        80            0 |                        168      0.323    1.000
+            400        off |               80        80            0 |                       1838      0.042    1.000
+            900         on |               80        58           22 |                          0      1.000    0.725
+            900        off |               80        58           22 |                       1467      0.038    0.725
+           1500         on |               80        37           43 |                          0      1.000    0.463
+           1500        off |               80        37           43 |                       1195      0.030    0.463
+           3000         on |               80        14           66 |                          0      1.000    0.175
+           3000        off |               80        14           66 |                        578      0.024    0.175
+
+   all four rules at 900 km/h, adjacency on: 128/150 injected anomalies detected, 0 legitimate events flagged of 20190.
+   Reading: a low V_MAX (strict) flags genuine air travellers -> false positives; a high V_MAX (lenient) lets spoofed
+   locations whose gap exceeds d/V_MAX slip through -> false negatives; without the border exemption legitimate
+   border-town hopping is flagged whatever V_MAX is chosen.
